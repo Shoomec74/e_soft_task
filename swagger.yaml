@@ -68,24 +68,19 @@ paths:
       responses:
         '201':
           description: ''
+  /api/tasks/{userId}:
     get:
-      operationId: TasksController_findAll
-      parameters: []
+      operationId: TasksController_findAllTasksForUser
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: number
       responses:
         '200':
           description: ''
   /api/tasks/{id}:
-    get:
-      operationId: TasksController_findOne
-      parameters:
-        - name: id
-          required: true
-          in: path
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
     patch:
       operationId: TasksController_update
       parameters:

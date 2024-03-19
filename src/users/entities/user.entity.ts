@@ -6,15 +6,11 @@ import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 
 @Entity()
 export class User extends EntityBoilerplate {
-  constructor(partial: Partial<User>) {
-    super();
-    Object.assign(this, partial);
-  }
   @Column({ unique: true })
   login: string;
 
   @Exclude()
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @Column({

@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -10,9 +11,11 @@ export class EntityBoilerplate {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
+  @Exclude()
+  @CreateDateColumn({ select: false })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @Exclude()
+  @UpdateDateColumn({ select: false })
   updatedAt: Date;
 }

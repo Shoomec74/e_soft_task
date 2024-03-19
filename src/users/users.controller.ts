@@ -26,6 +26,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @CheckAbility({ action: Action.Create, subject: CreateUserDto })
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   async register(
     @Body(TransformUserDtoPipe) createUserDto: CreateUserDto,
@@ -35,20 +36,20 @@ export class UsersController {
 
   @CheckAbility({ action: Action.Read, subject: CreateUserDto })
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    return await this.usersService.findAll();
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @CheckAbility({ action: Action.Update, subject: CreateUserDto })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return await this.usersService.update(+id, updateUserDto);
   }
 
   @CheckAbility({ action: Action.Delete, subject: CreateUserDto })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.usersService.remove(+id);
   }
 }

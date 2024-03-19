@@ -1,6 +1,7 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { EntityBoilerplate } from 'src/utils/entityBoilerplate';
+import { PriorityTask, ProgressTask } from 'src/utils/types/types';
 
 @Entity()
 export class Task extends EntityBoilerplate {
@@ -15,15 +16,16 @@ export class Task extends EntityBoilerplate {
 
   @Column({
     type: 'enum',
-    enum: ['high', 'medium', 'low'],
+    enum: PriorityTask,
   })
-  priority: 'high' | 'medium' | 'low';
+  priority: PriorityTask;
 
   @Column({
     type: 'enum',
-    enum: ['to_do', 'in_progress', 'done', 'cancelled'],
+    enum: ProgressTask,
+    default: ProgressTask.TODO,
   })
-  status: 'to_do' | 'in_progress' | 'done' | 'cancelled';
+  status: ProgressTask;
 
   @ManyToOne(() => User, (user) => user.tasksCreated)
   creator: User;

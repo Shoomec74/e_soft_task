@@ -18,6 +18,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private blacklistTokensService: BlacklistTokensService,
   ) {}
+
   //-- Метод для проверки пароля пользователя --//
   async validatePassword(userLogin: string, password: string): Promise<User> {
     //-- Поиск аккаунта по электронной почте и типу аккаунта (в данном случае локальный аккаунт) --//

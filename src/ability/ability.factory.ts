@@ -8,6 +8,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateTaskDto } from 'src/tasks/dto/create-task.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UserRole } from 'src/utils/types/types';
@@ -23,7 +24,9 @@ export enum Action {
   Copy = 'copy',
 }
 
-export type Subjects = InferSubjects<typeof CreateUserDto | 'all'>;
+export type Subjects = InferSubjects<
+  typeof CreateUserDto | typeof CreateTaskDto | 'all'
+>;
 
 @Injectable()
 export class AbilityFactory {
