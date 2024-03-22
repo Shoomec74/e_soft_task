@@ -17,9 +17,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(login: string, password: string) {
     try {
       //-- Вызов сервиса authService для проверки соответствия пароля и электронной почты --//
-      const profile = await this.authService.validatePassword(login, password);
+      const user = await this.authService.validatePassword(login, password);
       //-- Если проверка прошла успешно, возвращаем профиль пользователя --//
-      return profile;
+      return user;
     } catch (err) {
       //-- В случае ошибки валидации (например, если пароль неверен) выбрасываем исключение --//
       throw new UnauthorizedException('Неверное имя пользователя или пароль');

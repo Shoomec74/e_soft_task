@@ -29,10 +29,12 @@ export class User extends EntityBoilerplate {
   @Column({ nullable: true })
   middleName: string;
 
-  @Column()
+  @Exclude()
+  @Column({ select: false })
   accessToken: string;
 
-  @Column()
+  @Exclude()
+  @Column({ select: false })
   refreshToken: string;
 
   @ManyToOne(() => User, (user) => user.subordinates)

@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { randomBytes } from 'crypto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { ITokens } from 'src/utils/types/types';
+import { ITokens, UserSelectAllFields } from 'src/utils/types/types';
 import { BlacklistTokensService } from 'src/blacklistTokens/blacklistTokens.service';
 
 @Injectable()
@@ -24,6 +24,7 @@ export class AuthService {
     //-- Поиск аккаунта по электронной почте и типу аккаунта (в данном случае локальный аккаунт) --//
     const user = await this.usersRepository.findOne({
       where: { login: userLogin },
+      select: UserSelectAllFields,
     });
 
     //-- Если аккаунт не найден, выбрасывается исключение --//
@@ -41,6 +42,7 @@ export class AuthService {
         throw new UnauthorizedException('Неверное имя пользователя или пароль');
       } else {
         //-- В случае успешной проверки возвращается профиль пользователя --//
+
         return user;
       }
     }
@@ -82,7 +84,10 @@ export class AuthService {
     //-- Генерация токенов доступа и обновления для профиля пользователя --//
     const tokens = await this.getTokens(userId);
 
-    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+      select: UserSelectAllFields,
+    });
 
     if ('accessToken' in user && user.accessToken !== '') {
       await this.blacklistTokensService.addToken(user.accessToken);
@@ -96,6 +101,37 @@ export class AuthService {
     });
 
     delete authProfile.password;
+    delete authProfile.updatedAt;
+
+    return authProfile;
+  }
+
+  async refreshToken(oldRefreshToken: string): Promise<ITokens> {
+    //-- Проверяем, есть ли oldRefreshToken в базе данных и удаляем его --//
+    const user = await this.usersRepository.findOne({
+      where: { refreshToken: oldRefreshToken },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Невалидный refreshToken');
+    }
+
+    if ('accessToken' in user && user.accessToken !== '') {
+      await this.blacklistTokensService.addToken(user.accessToken);
+    }
+
+    //-- Создаем новые accessToken и refreshToken --//
+    const tokens = await this.getTokens(user.id);
+
+    //-- Сохранение токена обновления в базе данных и получение обновленного профиля --//
+    const authProfile = await this.usersRepository.save({
+      ...user,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    });
+
+    delete authProfile.password;
+    delete authProfile.updatedAt;
 
     return authProfile;
   }

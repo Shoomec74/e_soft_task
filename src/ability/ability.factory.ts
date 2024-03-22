@@ -54,11 +54,10 @@ export class AbilityFactory {
       используйте именно заинжектированную модель из БД например this.botModel 
       так фабрика получит корректный Subjects передаваемого бота из репозитория в правило для проверки.
     */
-    type AppAbility = PureAbility<[Action, Subjects]>;
+    type AppAbility = PureAbility<[Action, Subjects | typeof User]>;
     const lambdaMatcher = (matchConditions: MatchConditions) => matchConditions;
-
     const isSuperAdmin = this.getRole(user, UserRole.SUPERADMIN);
-    // const isManager = this.getRole(user, UserRole.MANAGER);
+    const isManager = this.getRole(user, UserRole.MANAGER);
     // const isSubordinate = this.getRole(user, UserRole.SUBORDINATE);
 
     //-- Создаем строитель AbilityBuilder, который поможет нам определить правила доступа --//
@@ -66,7 +65,12 @@ export class AbilityFactory {
 
     //-- Здесь определяем правила доступа --//
     if (isSuperAdmin) {
-      can(Action.Manage, 'all');
+      can(Action.Create, User, (user: User) => {
+        return user.role !== UserRole.SUPERADMIN;
+      });
+      can(Action.Manage, CreateUserDto);
+    } else if (isManager) {
+      can(Action.Read, 'all');
     }
 
     //-- Возвращаем сформированный набор правил в гарду --//

@@ -26,6 +26,13 @@ paths:
       responses:
         '200':
           description: ''
+  /api/users/me:
+    get:
+      operationId: UsersController_find
+      parameters: []
+      responses:
+        '200':
+          description: ''
   /api/users/{id}:
     patch:
       operationId: UsersController_update
@@ -112,6 +119,13 @@ paths:
   /api/auth/signin:
     post:
       operationId: AuthController_signin
+      parameters: []
+      responses:
+        '201':
+          description: ''
+  /api/auth/refresh-token:
+    post:
+      operationId: AuthController_refreshToken
       parameters: []
       responses:
         '201':

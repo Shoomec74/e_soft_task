@@ -14,34 +14,42 @@ export class TasksService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async create(createTaskDto: CreateTaskDto, userId: number) {
-    const user = await this.userRepository.findOneBy({ id: userId });
-    if (!user) {
-      throw new NotFoundException('Пользователь не найден');
-    }
-    const task = this.taskRepository.create({
-      ...createTaskDto,
-      creator: user,
-    });
+  async create(createTaskDto: CreateTaskDto, userId: number): Promise<Task> {
+    //-- TODO: доработать создание таски для другого пользователя --//
     try {
+      const user = await this.userRepository.findOneBy({ id: userId });
+
+      if (!user) {
+        throw new NotFoundException('Пользователь не найден');
+      }
+
+      const task = this.taskRepository.create({
+        ...createTaskDto,
+        creator: user,
+      });
+
       return await this.taskRepository.save(task);
     } catch (e) {
       return e;
     }
   }
 
-  async findAllTasksForUser(userId: number) {
-    // Находим все задачи, созданные пользователем или назначенные на него
-    const tasks = await this.taskRepository
-      .createQueryBuilder('task')
-      .leftJoinAndSelect('task.creator', 'creator')
-      .leftJoinAndSelect('task.assignee', 'assignee')
-      .where('task.creatorId = :userId OR task.assigneeId = :userId', {
-        userId,
-      })
-      .getMany();
+  async findAllTasksForUser(userId: number): Promise<Task[]> {
+    try {
+      // Находим все задачи, созданные пользователем или назначенные на него
+      const tasks = await this.taskRepository
+        .createQueryBuilder('task')
+        .leftJoinAndSelect('task.creator', 'creator')
+        .leftJoinAndSelect('task.assignee', 'assignee')
+        .where('task.creatorId = :userId OR task.assigneeId = :userId', {
+          userId,
+        })
+        .getMany();
 
-    return tasks;
+      return tasks;
+    } catch (e) {
+      return e;
+    }
   }
 
   async update(id: number, updateTaskDto: UpdateTaskDto, ability: PureAbility) {

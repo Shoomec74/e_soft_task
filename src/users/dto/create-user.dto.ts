@@ -1,17 +1,26 @@
-import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
+import { UserRole } from 'src/utils/types/types';
 
 export class CreateUserDto {
-  @Length(0, 30)
+  @Length(1, 30)
   @IsString()
   @IsNotEmpty()
   firstName: string;
 
-  @Length(0, 30)
+  @Length(1, 30)
   @IsString()
   @IsNotEmpty()
   lastName: string;
 
-  @Length(0, 30)
+  @Length(1, 30)
   @IsString()
   @IsNotEmpty()
   middleName: string;
@@ -22,8 +31,21 @@ export class CreateUserDto {
   @IsNotEmpty()
   login: string;
 
-  @Length(8, 20)
+  @Length(4, 20)
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  @IsEnum(UserRole)
+  @IsNotEmpty()
+  @IsOptional()
+  role?: UserRole;
+
+  @IsOptional()
+  @IsInt({ each: true })
+  subordinateIds?: number[]; // Для менеджера: ID подчиненных
+
+  @IsOptional()
+  @IsInt()
+  managerId?: number; // Для подчиненного: ID менеджера
 }

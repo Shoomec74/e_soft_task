@@ -14,9 +14,9 @@ export class BlacklistTokensController {
   @Get()
   async addToken(
     @Headers('authorization') authHeader: string,
-  ): Promise<Record<string, string>> {
+  ): Promise<Record<string, boolean>> {
     const token = authHeader.split(' ')[1];
     await this.blacklistTokensService.addToken(token);
-    return { message: 'User logout' };
+    return { success: true };
   }
 }
