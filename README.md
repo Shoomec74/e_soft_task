@@ -1,6 +1,6 @@
 # Бэкенд чать проекта для Веб-приложения списка задач (TODO list).
 
-Ссылка на репозиторий **[GitHub](https://github.com/Shoomec74/e_soft_front)**
+Ссылка на репозиторий фронтенд части проекта **[GitHub](https://github.com/Shoomec74/e_soft_front)**
 
 ## Обзор
 
@@ -45,15 +45,7 @@ DB_NAME=                                   # Имя базы данных.
 ```
 npm run start:dev
 ```
-
-## Запуск в режиме production
-
-```
-docker-compose -f docker-compose.yml --env-file .env up -d
-```
-
----
-
+***
 ## Ручки для тестирования бэка в Postman
 ### Скопируйте JSON объект и импортируйте в Postman
 ````json
