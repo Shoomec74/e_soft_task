@@ -75,23 +75,17 @@ paths:
       responses:
         '201':
           description: ''
-  /api/tasks/{userId}:
     get:
       operationId: TasksController_findAllTasksForUser
-      parameters:
-        - name: userId
-          required: true
-          in: path
-          schema:
-            type: number
+      parameters: []
       responses:
         '200':
           description: ''
-  /api/tasks/{id}:
+  /api/tasks/{taskId}:
     patch:
       operationId: TasksController_update
       parameters:
-        - name: id
+        - name: taskId
           required: true
           in: path
           schema:
@@ -105,6 +99,7 @@ paths:
       responses:
         '200':
           description: ''
+  /api/tasks/{id}:
     delete:
       operationId: TasksController_remove
       parameters:

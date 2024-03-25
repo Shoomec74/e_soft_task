@@ -43,7 +43,7 @@ export class UsersController {
     return await this.usersService.findAll();
   }
 
-  @CheckAbility({ action: Action.Read, subject: CreateUserDto })
+  @CheckAbility({ action: Action.ACCESS, subject: CreateUserDto })
   @Get('me')
   async find(@Req() req: TJwtRequest) {
     return await this.usersService.findMe(req.user.id);

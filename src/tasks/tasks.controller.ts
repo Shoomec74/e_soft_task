@@ -24,27 +24,36 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @CheckAbility({ action: Action.Update, subject: CreateTaskDto })
+  @CheckAbility({ action: Action.Create, subject: CreateTaskDto })
   @Post()
   async create(@Body() createTaskDto: CreateTaskDto, @Req() req: TJwtRequest) {
-    return await this.tasksService.create(createTaskDto, req.user.id);
+    return await this.tasksService.create(
+      createTaskDto,
+      req.user.id,
+      req.ability,
+    );
   }
 
   @CheckAbility({ action: Action.Read, subject: CreateTaskDto })
-  @Get(':userId')
+  @Get()
   //-- TODO: создать правило или проверку чтобы пользователь получал только свои таски --//
-  async findAllTasksForUser(@Param('userId') userId: number) {
-    return await this.tasksService.findAllTasksForUser(userId);
+  async findAllTasksForUser(@Req() req: TJwtRequest) {
+    return await this.tasksService.findAllTasksForUser(req.user.id);
   }
 
-  @CheckAbility({ action: Action.Update, subject: CreateTaskDto })
-  @Patch(':id')
+  @CheckAbility({ action: Action.Update, subject: UpdateTaskDto })
+  @Patch(':taskId')
   update(
-    @Param('id') id: string,
+    @Param('taskId') taskId: string,
     @Body() updateTaskDto: UpdateTaskDto,
     @Req() req: TJwtRequest,
   ) {
-    return this.tasksService.update(+id, updateTaskDto, req.ability);
+    return this.tasksService.update(
+      +taskId,
+      updateTaskDto,
+      req.user.id,
+      req.ability,
+    );
   }
 
   @Delete(':id')

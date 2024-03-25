@@ -12,10 +12,10 @@ export class EntityBoilerplate {
   id: number;
 
   @Exclude()
-  @CreateDateColumn({ select: false })
+  @CreateDateColumn({ type: 'timestamptz', select: false })
   createdAt: Date;
 
   @Exclude()
-  @UpdateDateColumn({ select: false })
+  @UpdateDateColumn({ type: 'timestamptz', select: false })
   updatedAt: Date;
 }
