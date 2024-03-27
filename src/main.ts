@@ -40,7 +40,7 @@ async function bootstrap() {
 
   //-- Настройка CORS --//
   const cors = {
-    origin: '*', //-- Разрешить запросы с любого источника --//
+    origin: configService.get('ALLOW_URL'), //-- Разрешить запросы с любого источника --//
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', //-- Разрешенные HTTP-методы --//
     allowedHeaders: ['Content-Type', 'Accept', 'Authorization'], //-- Разрешенные заголовки --//
     credentials: true, //-- Поддержка учетных данных --//
